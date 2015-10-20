@@ -4,6 +4,7 @@ class Oystercard
 
   MAX_BALANCE = 90
   MIN_BALANCE = 1
+  MIN_FARE = 1
 
   def initialize
     @balance = 0
@@ -14,10 +15,6 @@ class Oystercard
   def top_up(amount)
   	raise StandardError, 'Cannot exceed #{MAX_BALANCE} pounds' if (balance + amount) > MAX_BALANCE
   	@balance += amount
-  end
-
-  def deduct(amount)
-  	@balance -= amount
   end
 
   def touch_in
@@ -31,6 +28,13 @@ class Oystercard
 
   def touch_out
   	@in_journey = false
+  	deduct(MIN_FARE)
+  end
+
+  private
+
+  def deduct(amount)
+  	@balance -= amount
   end
 
 end

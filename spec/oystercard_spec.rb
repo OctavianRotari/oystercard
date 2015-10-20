@@ -20,15 +20,6 @@ describe Oystercard do
 
 	end
 
-	describe '#deduct' do
-		it { is_expected.to respond_to(:deduct).with(1).argument }
-
-		it 'can deduct balance' do
-			subject.top_up(10) 
-			expect { subject.deduct 1}.to change{ subject.balance}.by -1
-		end
-	end
-
 	describe '#touch_in' do
 		it { is_expected.to respond_to(:touch_in)}
 
@@ -45,6 +36,12 @@ describe Oystercard do
 
 	describe '#touch_out' do
 		it { is_expected.to respond_to(:touch_out)}
+
+		it 'reduces journey fare' do
+			subject.top_up(10)
+			subject.touch_in
+			expect {subject.touch_out}.to change{subject.balance}.by(-1)
+		end
 
 		it 'card is no longer in journey' do
 			subject.top_up(Oystercard::MIN_BALANCE)
