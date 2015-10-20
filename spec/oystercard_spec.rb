@@ -33,8 +33,13 @@ describe Oystercard do
 		it { is_expected.to respond_to(:touch_in)}
 
 		it 'card is in journey' do
+			subject.top_up(Oystercard::MIN_BALANCE)
 			subject.touch_in
 			expect(subject).to be_in_journey
+		end
+
+		it 'will not touch in if balance is below #{MIN_BALANCE}' do
+		expect { subject.touch_in }.to raise_error 'Insufficient funds'
 		end
 	end
 
@@ -42,7 +47,8 @@ describe Oystercard do
 		it { is_expected.to respond_to(:touch_out)}
 
 		it 'card is no longer in journey' do
-			subject.touch_in
+			subject.top_up(Oystercard::MIN_BALANCE)
+			subject.touch_in 
 			subject.touch_out
 			expect(subject).not_to be_in_journey
 		end 
