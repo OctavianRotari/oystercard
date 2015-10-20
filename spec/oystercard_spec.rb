@@ -17,7 +17,7 @@ describe Oystercard do
 
 		it "raises error if balance exceeds #{Oystercard::MAX_BALANCE} pounds" do
 			subject.top_up(Oystercard::MAX_BALANCE)
-			expect{ subject.top_up 1 }.to raise_error 'Cannot exceed #{MAX_BALANCE} pounds'
+			expect{ subject.top_up 1 }.to raise_error "Cannot exceed #{Oystercard::MAX_BALANCE} pounds"
 		end
 
 	end
@@ -36,7 +36,6 @@ describe Oystercard do
 		end
 
 		it "expects that the card remembers the entry station" do
-			allow(subject).to receive(:entry_station).and_return(station)
 			subject.top_up(10)
 			subject.touch_in(station)
 			expect(subject.entry_station).to eq(station)
@@ -49,22 +48,42 @@ describe Oystercard do
 		it 'reduces journey fare' do
 			subject.top_up(10)
 			subject.touch_in(station)
-			expect {subject.touch_out}.to change{subject.balance}.by(-1)
+			expect {subject.touch_out(station)}.to change{subject.balance}.by(-1)
 		end
 
 		it 'card is no longer in journey' do
 			subject.top_up(Oystercard::MIN_BALANCE)
 			subject.touch_in(station)
-			subject.touch_out
+			subject.touch_out(station)
 			expect(subject).not_to be_in_journey
+		end
+
+		it 'raises error if card is no longer in journey' do
+			subject.top_up(Oystercard::MIN_BALANCE)
+			subject.touch_in(station)
+			subject.touch_out(station)
+			expect {subject.touch_out(station)}.to raise_error 'Error: card not touched in'
+
 		end
 
 		it "expect to set entry_station equal to nil" do
 			subject.top_up(Oystercard::MIN_BALANCE)
 			subject.touch_in(station)
-			subject.touch_out
+			subject.touch_out(station)
 			expect(subject.entry_station).to eq(nil)
 		end
+
+		it "expects that the card remembers the exit station" do
+			subject.top_up(10)
+			subject.touch_in(station)
+			subject.touch_out(station)
+			expect(subject.exit_station).to eq(station)
+		end
+
 	end
+
+	describe '#History' do 
+	end
+
 
 end

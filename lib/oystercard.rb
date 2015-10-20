@@ -2,7 +2,7 @@ require_relative "station.rb"
 
 class Oystercard
 
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :exit_station
 
   MAX_BALANCE = 90
   MIN_BALANCE = 1
@@ -12,11 +12,12 @@ class Oystercard
     @balance = 0
     @in_journey = false
     @entry_station = nil
+    @exit_station = nil
 
   end
 
   def top_up(amount)
-  	raise StandardError, 'Cannot exceed #{MAX_BALANCE} pounds' if (balance + amount) > MAX_BALANCE
+  	raise StandardError, "Cannot exceed #{MAX_BALANCE} pounds" if (balance + amount) > MAX_BALANCE
   	@balance += amount
   end
 
@@ -30,10 +31,12 @@ class Oystercard
   	!!entry_station
   end
 
-  def touch_out
+  def touch_out(station)
+    raise StandardError, 'Error: card not touched in' if @in_journey == false
   	@in_journey = false
     @entry_station = nil
   	deduct(MIN_FARE)
+    @exit_station = station
   end
 
   private
