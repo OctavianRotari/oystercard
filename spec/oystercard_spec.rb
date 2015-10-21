@@ -35,7 +35,12 @@ describe Oystercard do
 		it 'reduces journey fare' do
 			subject.top_up(10)
 			subject.touch_in(station)
-			expect {subject.touch_out(station)}.to change{subject.balance}.by(-1)
+			expect {subject.touch_out(station)}.to change{subject.balance}.by(-Oystercard::MIN_FARE)
+		end
+
+		it 'reduces journey fare' do
+			subject.top_up(10)
+			expect {subject.touch_out(station)}.to change{subject.balance}.by(-Oystercard::PENALTY_FARE)
 		end
 
 	end

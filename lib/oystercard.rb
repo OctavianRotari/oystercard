@@ -8,6 +8,7 @@ class Oystercard
   MAX_BALANCE = 90
   MIN_BALANCE = 1
   MIN_FARE = 1
+  PENALTY_FARE = 6
 
   def initialize
     @balance = 0
@@ -25,15 +26,14 @@ class Oystercard
   end
 
   def touch_out(station)
-    raise StandardError, 'Error: card not touched in' if @journey.entry_station == nil
+    fare
     @journey.exit_journey(station)
-  	deduct(MIN_FARE)
   end
 
   private
 
-  def deduct(amount)
-  	@balance -= amount
+  def fare
+  	@journey.in_journey? ? @balance -= MIN_FARE : @balance -= PENALTY_FARE
   end
 
 end
