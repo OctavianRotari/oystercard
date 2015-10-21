@@ -2,7 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
 
-	let(:station){ double :station }
+	let(:station){ double :station, name: "Aldgate", zone: 1}
 
 	it 'is initialized with a balance of zero' do
 		expect(subject.balance).to eq 0
