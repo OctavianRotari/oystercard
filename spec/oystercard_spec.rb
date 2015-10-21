@@ -73,16 +73,27 @@ describe Oystercard do
 			expect(subject.entry_station).to eq(nil)
 		end
 
-		it "expects that the card remembers the exit station" do
+		it "expects that the card remove exit_station when touch_out" do
 			subject.top_up(10)
 			subject.touch_in(station)
 			subject.touch_out(station)
-			expect(subject.exit_station).to eq(station)
+			expect(subject.exit_station).to eq(nil)
 		end
 
 	end
 
-	describe '#History' do 
+	describe '#History' do
+
+		it 'checks if thw journey is empty in the beginning' do
+			expect(subject.journey).to eq []
+		end
+
+		it "checks if the entry_station and the exit_station was stored in journey" do
+			subject.top_up(10)
+			subject.touch_in(station)
+			subject.touch_out(station)
+			expect(subject.journey.length).to eq 1
+		end
 	end
 
 
