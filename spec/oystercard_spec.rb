@@ -28,6 +28,11 @@ describe Oystercard do
 		expect { subject.touch_in(station) }.to raise_error 'Insufficient funds'
 		end
 
+		it "change penalty fare if touch_in two times and no touch_out" do
+			subject.top_up(10)
+			subject.touch_in(station)
+			expect {subject.touch_in(station)}.to change{ subject.balance }.by -6
+		end
 	end
 
 end

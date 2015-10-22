@@ -21,6 +21,7 @@ class Oystercard
   def touch_in(station)
   	raise StandardError, 'Insufficient funds' if (balance) < MIN_BALANCE
     @journey.open_journey(station)
+    @balance = @balance - @journey.fare
   end
 
   def touch_out(station)
