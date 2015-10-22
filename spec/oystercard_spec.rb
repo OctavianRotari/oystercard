@@ -3,7 +3,7 @@ require 'oystercard'
 describe Oystercard do
 
 	let(:station){ double :station }
-	let(:journey){ double :journey }
+	let(:journey){ double :journey, reset_fare: 0 }
 
 	it 'is initialized with a balance of zero' do
 		expect(subject.balance).to eq 0
