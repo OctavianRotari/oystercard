@@ -1,41 +1,46 @@
 
 class Journey
-  attr_reader :history, :entry_station, :exit_station, :fare
+  attr_reader :history, :travel, :fare
 
   MIN_FARE = 1
   PENALTY_FARE = 6
 
   def initialize
     @history = []
-    @entry_station = nil
-    @exit_station  = nil
     @fare = 0
+    @travel={}
   end
 
   def open_journey(station)
-    @entry_station = station
+    @travel[:entry_station] = station
+    save_journey
+    penalty_fare if history.length >= 2
   end
 
   def exit_journey(station)
-    @exit_station = station
+    @travel[:exit_station] = station
     save_journey
+    calculating_fare if history.length >= 2
   end
 
   def in_journey?
-    !!entry_station
+    true if history[-1].has_key?(:entry_station)
   end
 
   private
 
   def save_journey
-    @history << {:entry_station => @entry_station, :exit_station => @exit_station}
-    calculating_fare
-    @exit_station  = nil
-    @entry_station = nil
+    @history << @travel
+    @travel= {}
   end
 
   def calculating_fare
-    @exit_station != nil && @entry_station == nil ? @fare = PENALTY_FARE : @fare = MIN_FARE
+    history[-1].has_key?(:exit_station) == true && history[-2].has_key?(:exit_station) == true ? @fare = PENALTY_FARE : @fare = MIN_FARE
   end
+
+  def penalty_fare
+    @fare = PENALTY_FARE if history[-1].has_key?(:entry_station) == true && history[-2].has_key?(:entry_station) == true
+  end
+
 
 end

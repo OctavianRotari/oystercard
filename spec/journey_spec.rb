@@ -15,7 +15,7 @@ describe Journey do
     it "checks if the entry_station and the exit_station was stored in journey" do
       subject.open_journey(station)
       subject.exit_journey(station)
-      expect(subject.history.length).to eq 1
+      expect(subject.history).not_to be_empty
     end
 
   end
@@ -28,9 +28,9 @@ describe Journey do
     #   expect(subject.history[0]).to eq(:zone)
     # end
 
-    it "expect open_journey to register entry_station" do
+    it "expect open_journey to register station" do
       subject.open_journey(station)
-      expect(subject.entry_station).to eq(station)
+      expect(subject.history[-1]).to eq({:entry_station => station})
     end
 
     it 'card is in journey' do
@@ -47,12 +47,36 @@ describe Journey do
       expect(subject).not_to be_in_journey
     end
 
-    it "expect to set entry_station equal to nil" do
+    it "expect to travel nil" do
       subject.open_journey(entry_station)
       subject.exit_journey(exit_station)
-      expect(subject.entry_station).to eq(nil)
+      expect(subject.travel).to be_empty
     end
 
   end
+
+  describe "#fare" do
+
+    it "calculate fare for a journey" do
+      subject.open_journey(entry_station)
+      subject.exit_journey(exit_station)
+      expect(subject.fare).to eq(Journey::MIN_FARE)
+    end
+
+    it "charge penalty fare when there is no open_journey" do
+      subject.open_journey(entry_station)
+      subject.exit_journey(exit_station)
+      subject.exit_journey(exit_station)
+      expect(subject.fare).to eq(Journey::PENALTY_FARE)
+    end
+
+    it "charge penalty fare when person does touch in twice without doing touch_out" do
+      subject.open_journey(entry_station)
+      subject.open_journey(entry_station)
+      expect(subject.fare).to eq(Journey::PENALTY_FARE)
+    end
+
+  end
+
 
 end
