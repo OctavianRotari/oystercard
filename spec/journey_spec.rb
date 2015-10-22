@@ -53,12 +53,6 @@ describe Journey do
       expect(subject.entry_station).to eq(nil)
     end
 
-    it "expects that the card remove exit_station when touch_out" do
-      subject.open_journey(entry_station)
-      subject.exit_journey(exit_station)
-      expect(subject.exit_station).to eq(nil)
-    end
-
   end
 
 end

@@ -7,8 +7,6 @@ class Oystercard
 
   MAX_BALANCE = 90
   MIN_BALANCE = 1
-  MIN_FARE = 1
-  PENALTY_FARE = 6
 
   def initialize
     @balance = 0
@@ -26,14 +24,8 @@ class Oystercard
   end
 
   def touch_out(station)
-    fare
     @journey.exit_journey(station)
-  end
-
-  private
-
-  def fare
-  	@journey.in_journey? ? @balance -= MIN_FARE : @balance -= PENALTY_FARE
+    @balance = @balance - @journey.fare
   end
 
 end
