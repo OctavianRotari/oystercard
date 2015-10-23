@@ -5,8 +5,8 @@ class Oystercard
 
   attr_reader :balance, :journey
 
-  MAX_BALANCE = 90
-  MIN_BALANCE = 1
+  MAX = 90
+  MIN = 1
 
   def initialize( journey = Journey.new )
     @balance = 0
@@ -14,12 +14,12 @@ class Oystercard
   end
 
   def top_up(amount)
-  	raise StandardError, "Cannot exceed #{MAX_BALANCE} pounds" if (balance + amount) > MAX_BALANCE
+  	raise StandardError, "Cannot exceed #{MAX} pounds" if (balance + amount) > MAX
   	@balance += amount
   end
 
   def touch_in(station)
-  	raise StandardError, 'Insufficient funds' if (balance) < MIN_BALANCE
+  	raise StandardError, 'Insufficient funds' if (balance) < MIN
     @journey.open_journey(station)
     deduct
   end

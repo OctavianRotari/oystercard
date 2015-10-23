@@ -2,6 +2,8 @@ require 'oystercard'
 
 describe Oystercard do
 
+	let(:max) {Oystercard::MAX}
+	let(:min) {Oystercard::MIN}
 	let(:station){ double :station }
 	let(:journey){ double :journey, reset_fare: 0 }
 
@@ -15,16 +17,16 @@ describe Oystercard do
 			expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
 		end
 
-		it "raises error if balance exceeds #{Oystercard::MAX_BALANCE} pounds" do
-			subject.top_up(Oystercard::MAX_BALANCE)
-			expect{ subject.top_up 1 }.to raise_error "Cannot exceed #{Oystercard::MAX_BALANCE} pounds"
+		it "raises error if balance exceeds max pounds" do
+			subject.top_up(max)
+			expect{ subject.top_up 1 }.to raise_error "Cannot exceed #{max} pounds"
 		end
 
 	end
 
 	describe "balance Insufficient funds" do
 
-		it "will not touch in if balance is below #{Oystercard::MIN_BALANCE}" do
+		it "will not touch in if balance is below min" do
 			expect { subject.touch_in(station) }.to raise_error 'Insufficient funds'
 		end
 

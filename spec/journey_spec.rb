@@ -26,12 +26,7 @@ describe Journey do
 
     it "expect open_journey to register station" do
       subject.open_journey(station)
-      expect(subject.history[-1]).to eq({:entry_station => station})
-    end
-
-    it 'card is in journey' do
-      subject.open_journey(entry_station)
-      expect(subject).to be_in_journey
+      expect(subject.history[-1]).to eq({'entry_station' => station})
     end
   end
 
@@ -39,10 +34,6 @@ describe Journey do
     before(:each) do
       subject.open_journey(entry_station)
       subject.exit_journey(exit_station)
-    end
-
-    it 'card is no longer in journey' do
-      expect(subject).not_to be_in_journey
     end
 
     it "expect to travel nil" do

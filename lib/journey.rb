@@ -16,37 +16,32 @@ class Journey
   end
 
   def open_journey(station)
-    @travel[:entry_station] = station
-    save_journey
+    save_journey('entry_station', station)
     fare_touch_in if history.length >= 2
   end
 
   def exit_journey(station)
-    @travel[:exit_station] = station
-    save_journey
+    save_journey('exit_station', station)
     fare_touch_out if history.length >= 2
-  end
-
-  def in_journey?
-    true if history[-1].has_key?(:entry_station)
   end
 
   private
 
-  def save_journey
-    @history << @travel
+  def save_journey(input, station)
+    @history << @travel.merge!(input => station)
     @travel = {}
   end
 
   def fare_touch_out
-    history[-1].has_key?(:exit_station) == true && history[-2].has_key?(:exit_station) == true ?
-    @fare = PENALTY_FARE : @fare = MIN_FARE
+    check_hist('exit_station') ? @fare = PENALTY_FARE : @fare = MIN_FARE
   end
 
   def fare_touch_in
-    @fare = PENALTY_FARE if
-    history[-1].has_key?(:entry_station) == true && history[-2].has_key?(:entry_station) == true
+    @fare = PENALTY_FARE if check_hist('entry_station')
   end
 
+  def check_hist(input)
+    history[-1].has_key?(input) && history[-2].has_key?(input)
+  end
 
 end
