@@ -1,7 +1,6 @@
 
 class Journey
-  attr_reader :history, :travel
-  attr_accessor :fare
+  attr_reader :history, :travel, :fare
 
   MIN_FARE = 1
   PENALTY_FARE = 6
@@ -40,11 +39,13 @@ class Journey
   end
 
   def fare_touch_out
-    history[-1].has_key?(:exit_station) == true && history[-2].has_key?(:exit_station) == true ? @fare = PENALTY_FARE : @fare = MIN_FARE
+    history[-1].has_key?(:exit_station) == true && history[-2].has_key?(:exit_station) == true ?
+    @fare = PENALTY_FARE : @fare = MIN_FARE
   end
 
   def fare_touch_in
-    @fare = PENALTY_FARE if in_journey?
+    @fare = PENALTY_FARE if
+    history[-1].has_key?(:entry_station) == true && history[-2].has_key?(:entry_station) == true
   end
 
 

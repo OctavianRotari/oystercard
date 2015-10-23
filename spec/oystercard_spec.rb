@@ -22,17 +22,35 @@ describe Oystercard do
 
 	end
 
-	describe '#touch_in' do
+	describe "balance Insufficient funds" do
 
 		it "will not touch in if balance is below #{Oystercard::MIN_BALANCE}" do
-		expect { subject.touch_in(station) }.to raise_error 'Insufficient funds'
+			expect { subject.touch_in(station) }.to raise_error 'Insufficient funds'
 		end
 
+  end
+
+	describe '#balance' do
+
+		before(:each) do
+	  	subject.top_up(10)
+	  end
+
 		it "change penalty fare if touch_in two times and no touch_out" do
-			subject.top_up(10)
 			subject.touch_in(station)
 			expect {subject.touch_in(station)}.to change{ subject.balance }.by -6
 		end
+
+		it "expect to return balance changed by min_fare" do
+			subject.touch_in(station)
+			expect { subject.touch_out(station) }.to change{subject.balance}.by -1
+		end
+
+		it "expect to return balance changed by penalty_fare" do
+			subject.touch_out(station)
+			expect { subject.touch_out(station) }.to change{subject.balance}.by -6
+		end
+
 	end
 
 end

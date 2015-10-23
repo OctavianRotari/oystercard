@@ -3,8 +3,8 @@ require "journey"
 describe Journey do
 
   let(:station){double :station}
-  let(:entry_station){ Station.new(:name, :zone)}
-	let(:exit_station){ Station.new(:name, :zone)}
+  let(:entry_station){ double :station, name: "Aldgate", zone: 1 }
+	let(:exit_station) { double :station, name: "Whitechappel", zone: 2 }
 
   describe '#History' do
 
@@ -23,10 +23,6 @@ describe Journey do
   it { is_expected.to respond_to(:open_journey).with(1).argument}
 
   describe '#open_journey' do
-    # it "should store station in the history" do
-    #   subject.open_journey(station)
-    #   expect(subject.history[0]).to eq(:zone)
-    # end
 
     it "expect open_journey to register station" do
       subject.open_journey(station)
@@ -40,38 +36,33 @@ describe Journey do
   end
 
   describe '#exit_journey' do
-
-    it 'card is no longer in journey' do
+    before(:each) do
       subject.open_journey(entry_station)
       subject.exit_journey(exit_station)
+    end
+
+    it 'card is no longer in journey' do
       expect(subject).not_to be_in_journey
     end
 
     it "expect to travel nil" do
-      subject.open_journey(entry_station)
-      subject.exit_journey(exit_station)
       expect(subject.travel).to be_empty
     end
 
   end
 
   describe "#fare" do
-
-    it "calculate fare for a journey" do
+    before(:each) do
       subject.open_journey(entry_station)
-      subject.exit_journey(exit_station)
-      expect(subject.fare).to eq(Journey::MIN_FARE)
     end
 
     it "charge penalty fare when there is no open_journey" do
-      subject.open_journey(entry_station)
       subject.exit_journey(exit_station)
       subject.exit_journey(exit_station)
       expect(subject.fare).to eq(Journey::PENALTY_FARE)
     end
 
     it "charge penalty fare when person does touch in twice without doing touch_out" do
-      subject.open_journey(entry_station)
       subject.open_journey(entry_station)
       expect(subject.fare).to eq(Journey::PENALTY_FARE)
     end
